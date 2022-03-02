@@ -50,6 +50,7 @@ def producer(storage, index, empty, non_empty, mutex):
         non_empty.release()
         print (f"producer {current_process().name} almacenado {data}")
     empty.acquire()
+    # 
     add_data(storage,index, -1, mutex)
     non_empty.release()
     print (f"producer {current_process().name} almacenado {-1}")
@@ -62,6 +63,7 @@ def haya_productores(storage):
     return False
 
 
+# Coge el menor elemento de la cabeza de cada proceso
 def get_min(storage, index, mutex):
     n = []
     ind = []
@@ -124,6 +126,7 @@ def main():
         p.join()
 
     print("¿La lista", numbers[:], "está ordenada?:", numbers[:] == sorted(numbers[:]))
+
 
 if __name__ == '__main__':
     #for i in range(1):
