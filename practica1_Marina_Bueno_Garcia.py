@@ -63,14 +63,15 @@ def haya_productores(storage):
 
 
 def get_min(storage, index, mutex):
-    mini = []
+    n = []
     ind = []
     for i in range(NPROD):
         if (storage[i][0] != -1):
-            mini.append(storage[i][0])
+            n.append(storage[i][0])
             ind.append(i)
-    k = np.argmin(mini)
-    return ind[k], mini[k]
+    value = min(n)
+    k = ind[n.index(value)]
+    return k, value
 
 
 def consumer(storage, index, empty, non_empty, mutex, sorted_data):
@@ -80,13 +81,12 @@ def consumer(storage, index, empty, non_empty, mutex, sorted_data):
     while haya_productores(storage):
         print (f"consumer {current_process().name} desalmacenando")
         ind, value = get_min(storage, index, mutex)
-        if (value != -1):
-            get_data(storage[ind], index[ind], mutex[ind])
-            sorted_data[i] = value
-            empty[ind].release()
-            non_empty[ind].acquire()
-            print (f"consumer {current_process().name} consumiendo {value} del producer {ind}")
-            delay()
+        get_data(storage[ind], index[ind], mutex[ind])
+        sorted_data[i] = value
+        empty[ind].release()
+        print (f"consumer {current_process().name} consumiendo {value} del producer {ind}")
+        non_empty[ind].acquire()
+        delay()
         i += 1
 
 
