@@ -100,7 +100,7 @@ def main():
     for j in range(NPROD):
         for i in range(K):
             storage[j][i] = -1
-        print (f"almacen inicial del productor {j} es", storage[j][:], "y su índice", index[j].value)
+        print (f"almacen inicial del productor {j} es", storage[j][:], "y su índice es", index[j].value)
 
     # Tenemos para cada productor un semáforo general, un semáforo acotado y un mutex
     # non_empty: semáforo que avisa al consumidor que hay un elemento disponible
@@ -129,5 +129,4 @@ def main():
 
 
 if __name__ == '__main__':
-    #for i in range(1):
-        main()
+    main()
