@@ -6,6 +6,7 @@ from time import sleep
 from random import random, randint
 import numpy as np
 
+# Solo hay un storage de tamaño K*NRPOD y cada productor accede a su parte de memoria
 
 N = 4 # numero de elementos que genera el productor
 K = 10 # tamaño del buffer de cada productor

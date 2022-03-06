@@ -6,6 +6,7 @@ from time import sleep
 from random import random, randint
 import numpy as np
 
+# Cada productor tiene un storage de tamaño K
 
 N = 4 # numero de elementos que genera el productor
 K = 10 # tamaño del buffer de cada productor
@@ -49,8 +50,7 @@ def producer(storage, index, empty, non_empty, mutex):
         add_data(storage, index, data, mutex)
         non_empty.release()
         print (f"producer {current_process().name} almacenado {data}")
-    empty.acquire()
-    # 
+    empty.acquire() 
     add_data(storage,index, -1, mutex)
     non_empty.release()
     print (f"producer {current_process().name} almacenado {-1}")
@@ -64,7 +64,7 @@ def haya_productores(storage):
 
 
 # Coge el menor elemento de la cabeza de cada proceso
-def get_min(storage, index, mutex):
+def get_min(storage, index):
     n = []
     ind = []
     for i in range(NPROD):
@@ -77,12 +77,13 @@ def get_min(storage, index, mutex):
 
 
 def consumer(storage, index, empty, non_empty, mutex, sorted_data):
+    # Esperamos a que todos esten produciendo
     for v in range(NPROD):
         non_empty[v].acquire()
     i = 0
     while haya_productores(storage):
         print (f"consumer {current_process().name} desalmacenando")
-        ind, value = get_min(storage, index, mutex)
+        ind, value = get_min(storage, index)
         get_data(storage[ind], index[ind], mutex[ind])
         sorted_data[i] = value
         empty[ind].release()
@@ -107,9 +108,9 @@ def main():
     # empty: semáforo de tamaño K que avisa al productor de que ya puede almacenar un nuevo elemento
     # mutex: protege las variables compartidas: storage e index
     
-    non_empty = [Semaphore(0) for i in range(NPROD)]
-    empty = [BoundedSemaphore(K) for i in range(NPROD)]
-    mutex = [Lock() for i in range(NPROD)]
+    non_empty = [Semaphore(0) for _ in range(NPROD)]
+    empty = [BoundedSemaphore(K) for _ in range(NPROD)]
+    mutex = [Lock() for _ in range(NPROD)]
 
     prodlst = [Process(target=producer,
                         name=f'prod_{i}',
